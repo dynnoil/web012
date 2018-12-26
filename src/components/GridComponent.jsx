@@ -2,17 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { toggleActive, setFilter, loadDataInGrid } from '../actions';
+
 import { GridRecord } from './GridRecord.jsx';
 import { Filter } from './Filter.jsx';
 
 export class GridComponent extends React.PureComponent {
 
     static propTypes = {
-        records: PropTypes.array
+        records: PropTypes.array,
+        filter: PropTypes.string,
+        loading: PropTypes.bool
     }
 
     static defaultProps = {
-        records: []
+        records: [],
+        filter: '',
+        loading: false
     }
 
     constructor() {
@@ -23,23 +29,23 @@ export class GridComponent extends React.PureComponent {
 
     componentDidMount() {
         this.filterRef.current.focus();
+        this.loadData();
+    }
+
+    loadData() {
+        let { dispatch } = this.props;
+        dispatch(loadDataInGrid());
     }
 
     toggleActive(index) {
         const { dispatch } = this.props;
-        dispatch({
-            type: 'TOGGLE_ACTIVE',
-            index: index
-        });
+        dispatch(toggleActive(index));
     }
 
     handleFilterChange(event) {
         const value = event.target.value;
         const { dispatch } = this.props;
-        dispatch({
-            type: 'SET_FILTER',
-            filter: value
-        });
+        dispatch(setFilter(value));
     }
 
     render() {
@@ -75,7 +81,8 @@ export class GridComponent extends React.PureComponent {
 
 const mapStateToProps = (state) => ({
     records: state.grid.records,
-    filter: state.grid.filter
+    filter: state.grid.filter,
+    loading: state.grid.loading
 });
 
 export default connect(mapStateToProps)(GridComponent);

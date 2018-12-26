@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import * as ActionTypes from '../constants';
 
 const gridRecords = {
     filter: '',
@@ -6,7 +7,8 @@ const gridRecords = {
         { firstName: "John", lastName: "Doe", active: false, id: 1 },
         { firstName: "Mary", lastName: "Moe", active: false, id: 2 },
         { firstName: "Peter", lastName: "Noname", active: true, id: 3 }
-    ]
+    ],
+    loading: false
 };
 
 const detailsRecords = [
@@ -28,19 +30,27 @@ const detailsRecords = [
 
 export function grid(state = gridRecords, action) {
     switch (action.type) {
-        case 'TOGGLE_ACTIVE':
+        case ActionTypes.TOGGLE_ACTIVE:
             const records = state.records.slice();
             const record = records[action.index];
             records[action.index] = Object.assign({}, record, { active: !record.active });
             return Object.assign({}, state, {
                 records: records
             });
-        case 'SET_FILTER':
+        case ActionTypes.SET_FILTER:
             return Object.assign({}, state, {
                 filter: action.filter
             });
+        case ActionTypes.START_LOADING:
+            return Object.assign({}, state, { loading: true });
+        case ActionTypes.STOP_LOADING:
+            return Object.assign({}, state, { loading: false });
+        case ActionTypes.ADD_DATA:
+            return Object.assign({}, state, {
+                records: [...action.value]
+            });
         default:
-            return state
+            return state;
     }
 }
 
