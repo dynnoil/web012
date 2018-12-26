@@ -4,7 +4,7 @@ module.exports = {
     mode: 'development',
     devtool: 'source-map',
     entry: {
-        app: path.join(__dirname, 'src', 'App.jsx')
+        app: path.join(__dirname, 'src', 'containers', 'App.jsx')
     },
     output: {
         path: path.join(__dirname, 'dist'),
